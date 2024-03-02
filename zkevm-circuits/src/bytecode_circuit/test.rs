@@ -8,6 +8,7 @@ use bus_mapping::{evm::OpcodeId, state_db::CodeDB};
 use eth_types::{Bytecode, Field, ToWord, Word};
 use halo2_proofs::{dev::MockProver, halo2curves::bn256::Fr};
 use log::error;
+use log::trace;
 
 #[test]
 fn bytecode_circuit_unusable_rows() {
@@ -54,7 +55,7 @@ pub fn test_bytecode_circuit_unrolled<F: Field>(
         }
     }
     let error_msg = if success { "valid" } else { "invalid" };
-    assert_eq!(result.is_ok(), success, "proof must be {error_msg}");
+    assert_eq!(result.is_ok(), success, "proof must be {}", error_msg);
 }
 
 /// Verify unrolling code
@@ -117,7 +118,7 @@ fn bytecode_unrolling() {
     // Unroll the bytecode
     let unrolled = unroll(bytecode.to_vec());
     // Check if the bytecode was unrolled correctly
-    assert_eq!(
+    assert!(unrolled ==
         UnrolledBytecode {
             bytes: bytecode.to_vec(),
             rows,
